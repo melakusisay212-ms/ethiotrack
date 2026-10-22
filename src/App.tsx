@@ -1,8 +1,8 @@
 import { useEffect, useState, createContext, useContext, useCallback } from 'react';
-import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import type { AppData, Transaction, Account, Budget, Goal, Loan, Category } from './types';
+import { Routes, Route, NavLink } from 'react-router-dom';
+import type { AppData, Account, Category } from './types';
 import { loadData, saveData, formatMoney } from './utils/storage';
-import { toEthiopian, formatEthDate, ETH_MONTHS } from './utils/ethiopianCalendar';
+import { toEthiopian, ETH_MONTHS } from './utils/ethiopianCalendar';
 
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
@@ -15,7 +15,7 @@ import Settings from './pages/Settings';
 
 type AppContextType = {
   data: AppData;
-  setData: React.Dispatch<React.SetStateAction<AppData>>;
+  setData: React.Dispatch<React.SetStateAction<AppData | null>>;
   persist: (next: AppData) => Promise<void>;
   money: (n: number) => string;
   getCat: (id: string | null) => Category | undefined;
@@ -41,7 +41,6 @@ const NAV = [
 export default function App() {
   const [data, setData] = useState<AppData | null>(null);
   const [loading, setLoading] = useState(true);
-  const location = useLocation();
 
   useEffect(() => {
     loadData().then((d) => {
